@@ -65,6 +65,14 @@ Run :
 docker run -p 8000:8000 mini-projet-mlops
 ```
 
+Docker Compose :
+
+```bash
+docker compose up --build
+```
+
+Le service lance d'abord `python train.py`, puis demarre l'API sur `http://localhost:8000`.
+
 ## 4) CI GitHub Actions
 
 Workflow : `.github/workflows/ci.yml`
