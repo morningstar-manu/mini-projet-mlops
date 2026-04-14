@@ -88,7 +88,7 @@ Image poussee vers :
 ## Elements pour le rapport PDF
 
 Inclure :
-- nom et prenom
+- Mopeno-Bia et Emmanuel
 - dataset choisi : Iris
 - URL du depot Git
 - capture d'ecran pipeline sur `feature/*`
