@@ -65,6 +65,14 @@ Run :
 docker run -p 8000:8000 mini-projet-mlops
 ```
 
+Docker Compose :
+
+```bash
+docker compose up --build
+```
+
+Le service lance d'abord `python train.py`, puis demarre l'API sur `http://localhost:8000`.
+
 ## 4) CI GitHub Actions
 
 Workflow : `.github/workflows/ci.yml`
@@ -80,8 +88,48 @@ Image poussee vers :
 ## Elements pour le rapport PDF
 
 Inclure :
-- nom et prenom
+- Mopeno-Bia et Emmanuel
 - dataset choisi : Iris
 - URL du depot Git
 - capture d'ecran pipeline sur `feature/*`
 - capture d'ecran pipeline sur `develop` avec train + build + publication
+
+## 5) Terraform (AWS)
+
+Fichiers Terraform :
+- `main.tf`
+- `variables.tf`
+- `outputs.tf`
+- `terraform.tfvars.example`
+
+Objectif :
+- creer un bucket S3 pour le state Terraform
+- creer une table DynamoDB pour le lock Terraform
+
+Etapes :
+
+1. Copier l'exemple de variables
+
+```bash
+copy terraform.tfvars.example terraform.tfvars
+```
+
+2. Modifier `terraform.tfvars` et definir un `bucket_name` unique globalement.
+
+3. Initialiser Terraform
+
+```bash
+terraform init
+```
+
+4. Verifier le plan
+
+```bash
+terraform plan
+```
+
+5. Appliquer
+
+```bash
+terraform apply
+```
