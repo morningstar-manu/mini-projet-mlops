@@ -1,0 +1,59 @@
+stages:
+  - validate
+  - plan
+  - apply
+
+image:
+  name: hashicorp/terraform:1.8.5
+  entrypoint: [""]
+
+variables:
+  TF_ENV: "dev"
+  TF_STATE_NAME: "tfstate-${TF_ENV}"
+
+  TF_HTTP_ADDRESS: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/${TF_STATE_NAME}"
+  TF_HTTP_LOCK_ADDRESS: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/${TF_STATE_NAME}/lock"
+  TF_HTTP_UNLOCK_ADDRESS: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/${TF_STATE_NAME}/lock"
+  TF_HTTP_LOCK_METHOD: "POST"
+  TF_HTTP_UNLOCK_METHOD: "DELETE"
+
+  # GitLab CI auth for managed state
+  TF_HTTP_USERNAME: "gitlab-ci-token"
+  TF_HTTP_PASSWORD: "${CI_JOB_TOKEN}"
+
+before_script:
+  - terraform init -reconfigure
+
+.plan-template:
+  stage: plan
+  script:
+    - terraform plan -out="plan-${TF_ENV}.tfplan"
+  artifacts:
+    name: "plan-${TF_ENV}-${CI_PIPELINE_IID}"
+    paths:
+      - "plan-${TF_ENV}.tfplan"
+    expire_in: 1 day
+
+.apply-template:
+  stage: apply
+  script:
+    - terraform apply -auto-approve "plan-${TF_ENV}.tfplan"
+
+validate:
+  stage: validate
+  script:
+    - terraform validate
+
+plan-dev:
+  extends: .plan-template
+  variables:
+    TF_ENV: "dev"
+
+apply-dev:
+  extends: .apply-template
+  variables:
+    TF_ENV: "dev"
+  needs:
+    - job: plan-dev
+      artifacts: true
+  when: manual
