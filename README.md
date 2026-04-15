@@ -93,3 +93,43 @@ Inclure :
 - URL du depot Git
 - capture d'ecran pipeline sur `feature/*`
 - capture d'ecran pipeline sur `develop` avec train + build + publication
+
+## 5) Terraform (AWS)
+
+Fichiers Terraform :
+- `main.tf`
+- `variables.tf`
+- `outputs.tf`
+- `terraform.tfvars.example`
+
+Objectif :
+- creer un bucket S3 pour le state Terraform
+- creer une table DynamoDB pour le lock Terraform
+
+Etapes :
+
+1. Copier l'exemple de variables
+
+```bash
+copy terraform.tfvars.example terraform.tfvars
+```
+
+2. Modifier `terraform.tfvars` et definir un `bucket_name` unique globalement.
+
+3. Initialiser Terraform
+
+```bash
+terraform init
+```
+
+4. Verifier le plan
+
+```bash
+terraform plan
+```
+
+5. Appliquer
+
+```bash
+terraform apply
+```

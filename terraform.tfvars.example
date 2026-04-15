@@ -1,0 +1,5 @@
+region              = "eu-west-3"
+project_name        = "mini-projet-mlops"
+environment         = "dev"
+bucket_name         = "REPLACE_WITH_UNIQUE_BUCKET_NAME"
+dynamodb_table_name = "tf-lock-mini-projet-mlops"
