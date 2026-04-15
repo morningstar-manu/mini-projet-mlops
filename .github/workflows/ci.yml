@@ -23,10 +23,26 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          echo "::group::Install dependencies"
+          pip install -r requirements.txt
+          echo "::endgroup::"
 
       - name: Train model
-        run: python train.py
+        run: |
+          echo "::group::Train model"
+          python train.py
+          echo "::endgroup::"
+
+      - name: Job summary
+        run: |
+          {
+            echo "## Training Job"
+            echo "- Status: success"
+            echo "- Python: 3.11"
+            echo "- Trigger: \`${GITHUB_REF}\`"
+            echo "- Commit: \`${GITHUB_SHA}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   docker-build-and-push:
     if: github.ref == 'refs/heads/develop'
@@ -57,3 +73,15 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Job summary
+        run: |
+          {
+            echo "## Docker Build & Push Job"
+            echo "- Status: success"
+            echo "- Image: \`${IMAGE_NAME}\`"
+            echo "- Tags:"
+            echo "  - \`latest\`"
+            echo "  - \`${GITHUB_SHA}\`"
+            echo "- Trigger: \`${GITHUB_REF}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
